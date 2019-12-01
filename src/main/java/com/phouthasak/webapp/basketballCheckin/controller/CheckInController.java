@@ -1,13 +1,12 @@
 package com.phouthasak.webapp.basketballCheckin.controller;
 
+import com.phouthasak.webapp.basketballCheckin.model.request.NewEventRequest;
 import com.phouthasak.webapp.basketballCheckin.service.CheckinServices;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,14 +19,20 @@ public class CheckInController {
     private CheckinServices checkinServices;
 
     @ApiOperation(value = "Get a list of all the ballers", response = List.class)
-    @GetMapping("/getBallers")
+    @GetMapping("/ballers/getBallers")
     public ResponseEntity getBallers() {
         return checkinServices.getBallers();
     }
 
     @ApiOperation(value = "Get a list of all the events", response = List.class)
-    @GetMapping("/getEvents")
+    @GetMapping("/event/getEvents")
     public ResponseEntity getEvents() {
         return checkinServices.getEvents();
+    }
+
+    @ApiOperation(value = "Create a new event")
+    @PostMapping("/event/createEvent")
+    public ResponseEntity createEvent(@RequestBody NewEventRequest newEventRequest) {
+        return checkinServices.createEvent(newEventRequest);
     }
 }
