@@ -1,4 +1,6 @@
+---
 spring:
+  profiles: local
   jpa:
     hibernate:
       ddl-auto: none

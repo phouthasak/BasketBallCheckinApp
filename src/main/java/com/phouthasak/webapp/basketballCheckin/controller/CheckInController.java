@@ -1,5 +1,7 @@
 package com.phouthasak.webapp.basketballCheckin.controller;
 
+import com.phouthasak.webapp.basketballCheckin.service.CheckinServices;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,11 +13,12 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-public class TestController {
-    @GetMapping("/test")
-    public ResponseEntity test() {
-        Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("response", "hello world");
-        return new ResponseEntity(responseMap, HttpStatus.OK);
+public class CheckInController {
+    @Autowired
+    private CheckinServices checkinServices;
+
+    @GetMapping("/getBallers")
+    public ResponseEntity getBallers() {
+        return checkinServices.getBallers();
     }
 }
