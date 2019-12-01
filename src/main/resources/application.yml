@@ -12,3 +12,13 @@ spring:
     url: # need to provide jdbc url string
     username: # database username
     password: # database password
+  app:
+    version: 1.0
+
+swagger:
+  title: Basket Ball Checkin App REST Api
+  description: REST Api Endpoints
+  contact:
+    name: Phouthasak Douanglee
+    website: phouthasak.com
+    email: jphouthasakdouanglee@gmail.com
