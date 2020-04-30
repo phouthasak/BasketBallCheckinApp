@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import firebase from '../api/Firebase';
-
+import { Form, Button, Card } from 'react-bootstrap';
 class LandingPage extends Component {
   constructor() {
     super();
     this.state = {
       firstName: '',
-      lastName: ''
+      lastName: '',
+      items: []
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -33,30 +34,50 @@ class LandingPage extends Component {
     });
   }
 
+  componentDidMount() {
+    const itemsRef = firebase.database().ref('player');
+    itemsRef.on('value', (snapshot) => {
+      let items = snapshot.val();
+      let newState = [];
+      console.log(items);
+      for (let item in items) {
+        newState.push({
+          id: item,
+          firstName: items[item].firstName,
+          lastName: items[item].lastName
+        });
+      }
+      this.setState({
+          items: newState
+      });
+    });
+  }
+
   render() {
     return (
-      <div>
-        <header>
-          <div className='wrapper'>
-            <h1>Ball Is Life</h1>
-
-          </div>
-        </header>
-        <div className='container'>
-          <section className='add-item'>
-            <form onSubmit={this.handleSubmit}>
-              <input type="text" name="firstName" placeholder="First Name" onChange={this.handleChange} value={this.state.firstName} />
-              <input type="text" name="lastName" placeholder="Last Name" onChange={this.handleChange} value={this.state.lastName} />
-              <button>Add Player</button>
-            </form>
-          </section>
-          <section className='display-item'>
-            <div className='wrapper'>
-              <ul>
-              </ul>
-            </div>
-          </section>
+      <div className='container-fluid'>
+        <div className='mx-auto'>
+          <h1>Add A Player</h1>
         </div>
+        <Card className='mx-auto' style={{maxWidth: '500px'}}>
+          <Card.Body>
+            <Form className='text-left'>
+              <Form.Group controlId="formFirstName">
+                <Form.Label>First Name</Form.Label>
+                <Form.Control type="text" placeholder="First Name" />
+              </Form.Group>
+
+              <Form.Group controlId="formLastName">
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control type="text" placeholder="Last Name" />
+              </Form.Group>
+
+              <Button variant="primary" type="submit">
+                Add Player
+              </Button>
+            </Form>
+          </Card.Body>
+        </Card>
       </div>
     );
   }
