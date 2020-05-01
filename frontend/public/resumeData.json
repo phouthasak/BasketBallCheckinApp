@@ -1,0 +1,79 @@
+{
+  "main": {
+    "name":"Phouthasak Douanglee",
+    "occupation":"Full Stack Software Engineer",
+    "description":"Here will be your description. Use this to describe what you do or whatever you feel best describes yourself to a potential employer",
+    "image":"profile.jpg",
+    "bio":"Use this bio section as your way of describing yourself and saying what you do, what technologies you like to use or feel most comfortable with, describing your personality, or whatever else you feel like throwing in.",
+    "contactmessage":"Here is where you should write your message to readers to have them get in contact with you.",
+    "email": "jphouthasakdouanglee@gmail.com",
+    "phone": "567-249-6684",
+    "website": "http://www.timbakerdev.com",
+    "resumedownload":"http://timbakerdev.com",
+    "address": {
+      "city": "Columbus, Ohio"
+    },
+    "social":[
+      {
+        "name":"linkedin",
+        "url":"https://www.linkedin.com/in/phouthasakdouanglee/",
+        "className":"fa fa-linkedin"
+      },
+      {
+        "name":"github",
+        "url":"https://github.com/phouthasak",
+        "className":"fa fa-github"
+      }
+    ]
+  },
+  "resume":{
+    "education":[
+      {
+        "school":"University Of Toledo",
+        "degree":"Bachelor of Science in Computer Science",
+        "graduated":"May 2017",
+        "description":"Class of 2017, graduated with Magna Cum Laude honors"
+      }
+    ],
+    "work":[
+      {
+        "company":"JPMorgan Chase & Co",
+        "title":"Software Engineer",
+        "years":"July 2017 - Current",
+        "description":"Worked as a full stack software engineer and tech lead."
+      },
+      {
+        "company":"Norplas Industries",
+        "title":"Software Engineer Co-Op",
+        "years":"May 2013 - May 2016",
+        "description":"Worked as a full stack software engineer."
+      }
+    ],
+    "skills":[
+      {
+        "name":"Java",
+        "level":"90%"
+      },
+      {
+        "name":"ReactJs",
+        "level":"70%"
+      },
+      {
+        "name":"JavaScript",
+        "level":"70%"
+      },
+      {
+        "name":"CSS",
+        "level":"80%"
+      },
+      {
+        "name":"HTML5",
+        "level":"80%"
+      },
+      {
+        "name":"MySQL",
+        "level":"70%"
+      }
+    ]
+  }
+}
