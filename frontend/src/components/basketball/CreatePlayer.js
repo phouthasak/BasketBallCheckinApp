@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Button, Card, Form } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Card, Form } from 'react-bootstrap';
+import InputFieldWithLabel from "../common/InputFieldWithLabel";
+import LinkButton from "../common/LinkButton";
+import SubmitButton from "../common/SubmitButton";
 
 class CreatePlayer extends Component {
   render() {
@@ -12,41 +14,11 @@ class CreatePlayer extends Component {
         <Card className='mx-auto' style={{maxWidth: '500px'}}>
           <Card.Body>
             <Form className='m-0'>
-              <Form.Group className='text-left' controlId="firstName">
-                <Form.Label>First Name:</Form.Label>
-                <Form.Control className='mb-0' type="text" placeholder="First name" style={{
-                  display: 'block',
-                  width: '100%',
-                  padding: '.375rem .75rem',
-                  fontSize: '1.5rem',
-                  lineHeight: '2.0',
-                  color: '#495057',
-                  backgroundColor: '#fff',
-                  backgroundClip: 'padding-box',
-                  border: '1px solid #ced4da'
-                }} />
-              </Form.Group>
+              <InputFieldWithLabel controlId='playerFirstName' label='First Name' placeHolder='First Name' />
+              <InputFieldWithLabel controlId='playerLastName' label='Last Name' placeHolder='Last Name' />
 
-              <Form.Group className='text-left' controlId="lastName">
-                <Form.Label>Last Name:</Form.Label>
-                <Form.Control className='mb-0 input-bootstrap-fix' type="text" placeholder="Last Name" style={{
-                  display: 'block',
-                  width: '100%',
-                  padding: '.375rem .75rem',
-                  fontSize: '1.5rem',
-                  lineHeight: '2.0',
-                  color: '#495057',
-                  backgroundColor: '#fff',
-                  backgroundClip: 'padding-box',
-                  border: '1px solid #ced4da'
-                }} size='lg' />
-              </Form.Group>
-              <Button className='mb-0' variant="primary" type="submit" size='lg'>
-                Submit
-              </Button>
-              <Button className='mb-0 ml-3' variant="info" size='lg'>
-                <Link to='/basketball' className='text-white'>Home</Link>
-              </Button>
+              <SubmitButton />
+              <LinkButton link='/basketball' label='Home' />
             </Form>
           </Card.Body>
         </Card>
