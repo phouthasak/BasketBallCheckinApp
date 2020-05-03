@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 
 class SubmitButton extends Component {
@@ -11,7 +10,5 @@ class SubmitButton extends Component {
     );
   }
 }
-
-SubmitButton.propTypes = {};
 
 export default SubmitButton;

@@ -8,26 +8,20 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "EVENT")
-@Setter
+@Table(name = "AUDIT")
 @Getter
-public class Event {
+@Setter
+public class Audit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "event_id")
-    private int eventId;
+    @Column(name = "audit_id")
+    private int auditId;
 
-    @Column(name = "event_location")
-    private String location;
+    @Column(name = "action_type")
+    private String actionType;
 
-    @Column(name = "court_number")
-    private Integer courtNumber;
-
-    @Column(name = "event_time")
-    private Date eventTime;
-
-    @Column(name = "permit")
-    private byte[] permit;
+    @Column(name = "description")
+    private String description;
 
     @JsonIgnore
     @Column(name = "created_date")
@@ -36,14 +30,6 @@ public class Event {
     @JsonIgnore
     @Column(name = "created_by")
     private String createdBy;
-
-    @JsonIgnore
-    @Column(name = "updated_date")
-    private Date updatedDate;
-
-    @JsonIgnore
-    @Column(name = "updated_by")
-    private String updatedBy;
 
     @JsonIgnore
     @Column(name = "active")

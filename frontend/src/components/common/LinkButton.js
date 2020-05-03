@@ -7,7 +7,7 @@ class LinkButton extends Component {
   render() {
     return (
       <Link to={this.props.link} className='text-white'>
-        <Button className='mb-0 ml-3' variant="info" size='lg'>{this.props.label}</Button>
+        <Button className='mb-0 ml-3' variant={this.props.type} size='lg'>{this.props.label}</Button>
       </Link>
     );
   }
@@ -15,7 +15,8 @@ class LinkButton extends Component {
 
 LinkButton.propTypes = {
   link: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired
+  label: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired
 };
 
 export default LinkButton;

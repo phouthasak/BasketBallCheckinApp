@@ -8,14 +8,14 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "BALLER")
+@Table(name = "PLAYER")
 @Getter
 @Setter
-public class Baller {
+public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "baller_id")
-    private int ballerId;
+    @Column(name = "player_id")
+    private int playerId;
 
     @Column(name = "first_name")
     private String firstName;

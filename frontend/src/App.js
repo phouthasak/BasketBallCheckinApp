@@ -5,7 +5,7 @@ import { Switch, Route } from 'react-router';
 import Basketball from './components/Basketball';
 import PersonalPage from './components/PersonalPage';
 import CreateEvent from './components/basketball/CreateEvent';
-import CreatePlayer from './components/basketball/CreatePlayer';
+import ViewPlayers from './components/basketball/ViewPlayers';
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
           <Route exact path='/' component={PersonalPage}/>
           <Route path='/basketBall' component={Basketball}/>
           <Route path='/createEvent' component={CreateEvent}/>
-          <Route path='/createPlayer' component={CreatePlayer}/>
+          <Route path='/viewPlayers' component={ViewPlayers}/>
         </Switch>
       </Router>
     </div>

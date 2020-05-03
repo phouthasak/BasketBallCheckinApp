@@ -7,7 +7,7 @@ class InputFieldWithLabel extends Component {
     return (
       <Form.Group className='text-left' controlId={this.props.controlId}>
         <Form.Label>{this.props.label + ':'}</Form.Label>
-        <Form.Control className='mb-0' type="text" placeholder={this.props.placeHolder} style={{
+        <Form.Control className={this.props.showError ? 'mb-0 is-invalid' : 'mb-0'} type="text" placeholder={this.props.placeHolder} style={{
           display: 'block',
           width: '100%',
           padding: '.375rem .75rem',
@@ -17,7 +17,8 @@ class InputFieldWithLabel extends Component {
           backgroundColor: '#fff',
           backgroundClip: 'padding-box',
           border: '1px solid #ced4da'
-        }} size='lg' />
+        }} size='lg' value={this.props.value} onChange={this.props.valueChange} required={this.props.required}/>
+        <Form.Control.Feedback className={this.props.required && this.props.showError ? '' : 'd-none'} type={'invalid'}>{this.props.feedbackLabel}</Form.Control.Feedback>
       </Form.Group>
     );
   }
@@ -26,7 +27,12 @@ class InputFieldWithLabel extends Component {
 InputFieldWithLabel.propTypes = {
   controlId: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  placeHolder: PropTypes.string.isRequired
+  placeHolder: PropTypes.string.isRequired,
+  valueChange: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+  required: PropTypes.bool.isRequired,
+  feedbackLabel: PropTypes.string.isRequired,
+  showError: PropTypes.bool.isRequired
 };
 
 export default InputFieldWithLabel;

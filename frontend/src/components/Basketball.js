@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Card } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Card } from 'react-bootstrap';
+import LinkButton from "./common/LinkButton";
 
 class Basketball extends Component {
   render() {
@@ -11,15 +11,9 @@ class Basketball extends Component {
         </div>
         <Card className='mx-auto' style={{maxWidth: '500px'}}>
           <Card.Body>
-            <Button className='mb-0' variant="primary" size='lg'>
-              <Link className='text-white' to='/createPlayer'>View Events</Link>
-            </Button>
-            <Button className='mb-0 mr-3 ml-3' variant="primary" size='lg'>
-              <Link className='text-white' to='/createPlayer'>Create Player</Link>
-            </Button>
-            <Button className='mb-0' variant="primary" size='lg'>
-              <Link className='text-white' to='/createEvent'>Create Event</Link>
-            </Button>
+            <LinkButton link='/createPlayer' label='View Events' type='primary' />
+            <LinkButton link='/viewPlayers' label='View Players' type='primary' />
+            <LinkButton link='/createPlayer' label='Create Events' type='primary' />
           </Card.Body>
         </Card>
       </div>
