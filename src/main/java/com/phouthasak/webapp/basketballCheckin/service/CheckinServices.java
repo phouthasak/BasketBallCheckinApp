@@ -3,11 +3,11 @@ package com.phouthasak.webapp.basketballCheckin.service;
 import com.phouthasak.webapp.basketballCheckin.entity.Audit;
 import com.phouthasak.webapp.basketballCheckin.entity.Event;
 import com.phouthasak.webapp.basketballCheckin.entity.Player;
-import com.phouthasak.webapp.basketballCheckin.model.request.NewEventRequest;
 import com.phouthasak.webapp.basketballCheckin.model.request.NewPlayerRequest;
 import com.phouthasak.webapp.basketballCheckin.model.response.ErrorResponse;
 import com.phouthasak.webapp.basketballCheckin.repository.AuditRepository;
 import com.phouthasak.webapp.basketballCheckin.repository.EventRepository;
+import com.phouthasak.webapp.basketballCheckin.repository.LocationRepository;
 import com.phouthasak.webapp.basketballCheckin.repository.PlayerRepository;
 import com.phouthasak.webapp.basketballCheckin.util.Constants;
 import com.phouthasak.webapp.basketballCheckin.util.Util;
@@ -15,10 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class CheckinServices {
@@ -30,6 +32,9 @@ public class CheckinServices {
 
     @Autowired
     private AuditRepository auditRepository;
+
+    @Autowired
+    private LocationRepository locationRepository;
 
     @Autowired
     private Util util;
@@ -59,29 +64,51 @@ public class CheckinServices {
         }
     }
 
-    public ResponseEntity getEvents() {
+    public ResponseEntity getLocations() {
         Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("events", eventRepository.findAllByActiveTrue());
+        responseMap.put("locations", locationRepository.findAllByActiveTrueOrderByLocationName());
         return new ResponseEntity(responseMap, HttpStatus.OK);
     }
 
-    public ResponseEntity createEvent(NewEventRequest newEventRequest) {
-        try {
-            Event event = new Event();
-            event.setLocation(newEventRequest.getLocation());
-            event.setCourtNumber(newEventRequest.getCourtNumber());
-            event.setEventTime(newEventRequest.getEventTime());
-            event.setCreatedDate(new Date());
-            event.setCreatedBy(newEventRequest.getCreatedBy());
-            event.setUpdatedDate(new Date());
-            event.setUpdatedBy(newEventRequest.getCreatedBy());
-            event.setActive(true);
+    public ResponseEntity getEvents() {
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("events", eventRepository.findTop3ByActiveTrueOrderByCreatedDateDesc());
+        return new ResponseEntity(responseMap, HttpStatus.OK);
+    }
 
+    public ResponseEntity createEvent(Integer locationId, Integer courtNumber, Date eventTime, Boolean scheduled, Optional<MultipartFile> permit, Optional<String> permitFileName, Integer hostId) {
+        try {
+            Player player = playerRepository.findByPlayerIdAndActiveTrue(hostId);
+            String playerName = player.getFirstName() + " " + player.getLastName();
+            Event event = new Event();
+            event.setLocationId(locationId);
+            event.setCourtNumber(courtNumber);
+            event.setEventDateTime(eventTime);
+            event.setScheduled(scheduled);
+
+            if (permit.isPresent() && permitFileName.isPresent()) {
+                event.setPermit(permit.get().getBytes());
+                event.setPermitFileName(permitFileName.get());
+            }
+
+            event.setHostId(hostId);
+            event.setCreatedBy(playerName);
+            event.setCreatedDate(new Date());
+            event.setUpdatedBy(playerName);
+            event.setUpdatedDate(new Date());
+            event.setActive(true);
             eventRepository.saveAndFlush(event);
 
-            Map<String, Object> responseMap = new HashMap<>();
-            responseMap.put("eventId", event.getEventId());
-            return new ResponseEntity(responseMap, HttpStatus.OK);
+            if (event.getEventId() != 0) {
+                insertLog(Constants.AUDIT_ACTION_TYPE_CREATE_EVENT, "Created event " + event.getEventId(), playerName);
+                Map<String, Object> responseMap = new HashMap<>();
+                responseMap.put("eventId", event.getEventId());
+                return new ResponseEntity(responseMap, HttpStatus.OK);
+            } else {
+                ErrorResponse errorResponse = new ErrorResponse();
+                errorResponse.setMessage("Error saving event");
+                return new ResponseEntity(errorResponse, HttpStatus.OK);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             ErrorResponse errorResponse = new ErrorResponse();

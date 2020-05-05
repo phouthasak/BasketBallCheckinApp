@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "EVENT")
+@Table(name = "EVENTS")
 @Setter
 @Getter
 public class Event {
@@ -17,23 +17,41 @@ public class Event {
     @Column(name = "event_id")
     private int eventId;
 
-    @Column(name = "event_location")
-    private String location;
+    @JsonIgnore
+    @Column(name = "location_id")
+    private Integer locationId;
+
+    @OneToOne
+    @JoinColumn(name = "location_id", referencedColumnName = "location_id", insertable = false, updatable = false)
+    private Location location;
 
     @Column(name = "court_number")
     private Integer courtNumber;
 
-    @Column(name = "event_time")
-    private Date eventTime;
+    @Column(name = "event_date_time")
+    private Date eventDateTime;
+
+    @Column(name = "scheduled")
+    private Boolean scheduled;
 
     @Column(name = "permit")
     private byte[] permit;
+
+    @Column(name = "permit_file_name")
+    private String permitFileName;
+
+    @JsonIgnore
+    @Column(name = "host_id")
+    private Integer hostId;
+
+    @OneToOne
+    @JoinColumn(name = "host_id", referencedColumnName = "player_id", insertable = false, updatable = false)
+    private Player player;
 
     @JsonIgnore
     @Column(name = "created_date")
     private Date createdDate;
 
-    @JsonIgnore
     @Column(name = "created_by")
     private String createdBy;
 

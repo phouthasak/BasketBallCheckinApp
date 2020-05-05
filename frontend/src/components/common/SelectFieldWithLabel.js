@@ -3,6 +3,14 @@ import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 
 class SelectFieldWithLabel extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      options: [],
+      selected: {}
+    };
+  }
+
   render() {
     return (
       <Form.Group className='text-left' controlId="eventForm.LocationSelect">
@@ -30,8 +38,8 @@ class SelectFieldWithLabel extends Component {
 }
 
 SelectFieldWithLabel.propTypes = {
-  // options: PropTypes.array.isRequired,
-  // bindLabel: PropTypes.string.isRequired
+  options: PropTypes.array.isRequired,
+  bindLabel: PropTypes.string.isRequired
 };
 
 export default SelectFieldWithLabel;

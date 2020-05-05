@@ -7,7 +7,7 @@ class InputFieldWithLabel extends Component {
     return (
       <Form.Group className='text-left' controlId={this.props.controlId}>
         <Form.Label>{this.props.label + ':'}</Form.Label>
-        <Form.Control className={this.props.showError ? 'mb-0 is-invalid' : 'mb-0'} type="text" placeholder={this.props.placeHolder} style={{
+        <Form.Control className={this.props.showError ? 'mb-0 is-invalid' : 'mb-0'} type={this.props.type} placeholder={this.props.placeHolder} style={{
           display: 'block',
           width: '100%',
           padding: '.375rem .75rem',
@@ -32,7 +32,8 @@ InputFieldWithLabel.propTypes = {
   value: PropTypes.string.isRequired,
   required: PropTypes.bool.isRequired,
   feedbackLabel: PropTypes.string.isRequired,
-  showError: PropTypes.bool.isRequired
+  showError: PropTypes.bool.isRequired,
+  type: PropTypes.string.isRequired
 };
 
 export default InputFieldWithLabel;

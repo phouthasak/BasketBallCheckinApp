@@ -9,12 +9,16 @@ class BasketballServices extends BaseApi {
     return this._post('/api/player/createPlayer', jsonObject);
   }
 
+  getAllLocations() {
+    return this._get('/api/event/getLocations').then(this._json);
+  }
+
   getAllEvents() {
     return this._get('/api/event/getEvents').then(this._json);
   }
 
-  createNewEvent(jsonObject) {
-    return this._post('/api/event/createEvent', jsonObject);
+  createNewEvent(formData) {
+    return this._postWithFormData('/api/event/createEvent', formData);
   }
 }
 

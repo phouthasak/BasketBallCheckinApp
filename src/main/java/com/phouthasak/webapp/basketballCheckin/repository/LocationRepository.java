@@ -1,12 +1,12 @@
 package com.phouthasak.webapp.basketballCheckin.repository;
 
-import com.phouthasak.webapp.basketballCheckin.entity.Event;
+import com.phouthasak.webapp.basketballCheckin.entity.Location;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface EventRepository extends JpaRepository<Event, Integer> {
-    List<Event> findTop3ByActiveTrueOrderByCreatedDateDesc();
+public interface LocationRepository extends JpaRepository<Location, Integer> {
+    List<Location> findAllByActiveTrueOrderByLocationName();
 }

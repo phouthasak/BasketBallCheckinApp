@@ -122,9 +122,9 @@ class ViewPlayers extends Component {
           <Card className='mx-auto' style={{maxWidth: '500px'}}>
             <Card.Body>
               <Form className='m-0' onSubmit={this.onSubmit} noValidate>
-                <InputFieldWithLabel controlId='playerFirstName' label='First Name *' placeHolder='First Name' value={this.state.playerFirstName} valueChange={(e) => this.valueChange(e, 'playerFirstName')} required={true} feedbackLabel={'First name is required'} showError={this.state.errors.firstName} />
-                <InputFieldWithLabel controlId='playerMiddleName' label='Middle Name' placeHolder='Middle Name' value={this.state.playerMiddleName} valueChange={(e) => this.valueChange(e, 'playerMiddleName')}  required={false} feedbackLabel={''} showError={false} />
-                <InputFieldWithLabel controlId='playerLastName' label='Last Name *' placeHolder='Last Name' value={this.state.playerLastName} valueChange={(e) => this.valueChange(e, 'playerLastName')} required={true} feedbackLabel={'Last name is required'} showError={this.state.errors.lastName} />
+                <InputFieldWithLabel type='text' controlId='playerFirstName' label='First Name *' placeHolder='First Name' value={this.state.playerFirstName} valueChange={(e) => this.valueChange(e, 'playerFirstName')} required={true} feedbackLabel={'First name is required'} showError={this.state.errors.firstName} />
+                <InputFieldWithLabel type='text' controlId='playerMiddleName' label='Middle Name' placeHolder='Middle Name' value={this.state.playerMiddleName} valueChange={(e) => this.valueChange(e, 'playerMiddleName')}  required={false} feedbackLabel={''} showError={false} />
+                <InputFieldWithLabel type='text' controlId='playerLastName' label='Last Name *' placeHolder='Last Name' value={this.state.playerLastName} valueChange={(e) => this.valueChange(e, 'playerLastName')} required={true} feedbackLabel={'Last name is required'} showError={this.state.errors.lastName} />
                 <SubmitButton />
               </Form>
             </Card.Body>

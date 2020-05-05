@@ -5,9 +5,9 @@ first_name VARCHAR(150) not null,
 middle_name VARCHAR(150),
 last_name VARCHAR(150) not null,
 created_date DATETIME not null,
-created_by VARCHAR(10) not null,
+created_by VARCHAR(100) not null,
 updated_date DATETIME not null,
-updated_by VARCHAR(10) not null,
+updated_by VARCHAR(100) not null,
 active TINYINT default 1 not null
 );
 

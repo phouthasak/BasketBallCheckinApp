@@ -13,7 +13,7 @@ class Basketball extends Component {
           <Card.Body>
             <LinkButton link='/createPlayer' label='View Events' type='primary' />
             <LinkButton link='/viewPlayers' label='View Players' type='primary' />
-            <LinkButton link='/createPlayer' label='Create Events' type='primary' />
+            <LinkButton link='/createEvent' label='Create Event' type='primary' />
           </Card.Body>
         </Card>
       </div>

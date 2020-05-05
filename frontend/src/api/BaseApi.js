@@ -19,4 +19,14 @@ export default class BaseApi {
       body: JSON.stringify(payload)
     });
   }
+
+  _postWithFormData(url, payload) {
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json'
+      },
+      body: payload
+    });
+  }
 }
