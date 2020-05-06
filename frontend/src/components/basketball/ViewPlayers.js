@@ -90,7 +90,7 @@ class ViewPlayers extends Component {
   render() {
     const header = (
       <div className='text-left'>
-        <i className="pi pi-search" style={{margin:'4px 4px 0 0'}}></i>
+        <i className="pi pi-search" style={{margin:'4px 4px 0 0'}} />
         <InputText type="search" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Global Search" size="50"/>
       </div>
     );

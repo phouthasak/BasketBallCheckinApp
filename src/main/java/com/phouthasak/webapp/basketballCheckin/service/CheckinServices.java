@@ -72,7 +72,7 @@ public class CheckinServices {
 
     public ResponseEntity getEvents() {
         Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("events", eventRepository.findTop3ByActiveTrueOrderByCreatedDateDesc());
+        responseMap.put("events", eventRepository.findTop10ByActiveTrueOrderByCreatedDateDesc());
         return new ResponseEntity(responseMap, HttpStatus.OK);
     }
 

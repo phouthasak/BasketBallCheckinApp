@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Integer> {
-    List<Event> findTop3ByActiveTrueOrderByCreatedDateDesc();
+    List<Event> findTop10ByActiveTrueOrderByCreatedDateDesc();
 }

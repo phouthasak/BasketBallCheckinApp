@@ -52,6 +52,7 @@ public class Event {
     @Column(name = "created_date")
     private Date createdDate;
 
+    @JsonIgnore
     @Column(name = "created_by")
     private String createdBy;
 

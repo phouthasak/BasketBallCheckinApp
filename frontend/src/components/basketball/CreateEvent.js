@@ -1,21 +1,26 @@
 import React, { Component }from 'react';
 import { Card, Form } from 'react-bootstrap';
-import InputFieldWithLabel from "../common/InputFieldWithLabel";
-import SubmitButton from "../common/SubmitButton";
-import LinkButton from "../common/LinkButton";
+import InputFieldWithLabel from '../common/InputFieldWithLabel';
+import SubmitButton from '../common/SubmitButton';
+import LinkButton from '../common/LinkButton';
+import {InputText} from 'primereact/inputtext';
 import {Calendar} from 'primereact/calendar';
 import {Dropdown} from 'primereact/dropdown';
 import BasketballServices from '../../api/BasketballServices';
 import {ProgressSpinner} from 'primereact/progressspinner';
-import CheckboxWithLabel from "../common/CheckboxWithLabel";
-import TwoStepModal from "../common/TwoStepModal";
+import CheckboxWithLabel from '../common/CheckboxWithLabel';
+import TwoStepModal from '../common/TwoStepModal';
 import * as Stages from '../util/Constants';
-import Utilities from "../util/Utilities";
+import Utilities from '../util/Utilities';
+import {DataTable} from 'primereact/datatable';
+import {Column} from 'primereact/column';
+
 
 class CreateEvent extends Component{
   constructor(props) {
     super(props);
     this.state = {
+      events: [],
       locationOptions: [],
       location: '',
       date: '',
@@ -41,6 +46,9 @@ class CreateEvent extends Component{
     this.fileUpload = this.fileUpload.bind(this);
     this.validate = this.validate.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.getEvents = this.getEvents.bind(this);
+    this.scheduledTemplate = this.scheduledTemplate.bind(this);
+    this.eventDateTimeTemplate = this.eventDateTimeTemplate.bind(this);
   }
 
   componentDidMount() {
@@ -60,6 +68,15 @@ class CreateEvent extends Component{
   getPlayers(stateObject) {
     BasketballServices.getPlayers().then(response => {
       stateObject.hostOptions = response.players;
+      this.getEvents(stateObject);
+    }).catch(error => {
+      console.log(error);
+    });
+  }
+
+  getEvents(stateObject) {
+    BasketballServices.getEvents().then(response => {
+      stateObject.events = response.events;
       stateObject.doneLoading = true;
       this.setState(stateObject);
     }).catch(error => {
@@ -138,7 +155,29 @@ class CreateEvent extends Component{
     }
   }
 
+  scheduledTemplate(rowData) {
+    return <div>{rowData.scheduled.toString()}</div>;
+  }
+
+  eventDateTimeTemplate(rowData) {
+    const eventDate = new Date(rowData.eventDateTime);
+    const month = eventDate.getMonth() + 1;
+    const day = eventDate.getDate();
+    const year = eventDate.getFullYear();
+    const hour = eventDate.getHours();
+    const minutes = eventDate.getMinutes();
+    const finalString = month + '/' + day + '/' + year + ' ' + hour + ':' + minutes;
+    return <div>{finalString}</div>
+  }
+
   render() {
+    const header = (
+      <div className='text-left'>
+        <i className="pi pi-search" style={{margin:'4px 4px 0 0'}} />
+        <InputText type="search" onInput={(e) => this.setState({globalFilter: e.target.value})} placeholder="Global Search" size="50"/>
+      </div>
+    );
+
     return (
       <div className='container-fluid mb-5'>
         <div className={this.state.doneLoading ? 'd-none' : 'pt-5'}>
@@ -146,8 +185,29 @@ class CreateEvent extends Component{
         </div>
 
         <div className={this.state.doneLoading ? '' : 'd-none'}>
+          <div className='mx-auto pt-5 pb-3'>
+            <h1 className='text-white'>List of Events</h1>
+            <LinkButton link='/basketball' label='Home' type='primary' />
+          </div>
+          <div className="row pb-5">
+            <DataTable ref={(el) => this.dt = el} value={this.state.events} paginator={true} rows={10} header={header}
+                       globalFilter={this.state.globalFilter} emptyMessage="No records found" scrollable style={{width: '1000px'}}>
+              <Column field="eventId" header="Event Id" filter={true} filterPlaceholder="Id" style={{width: '75px'}} />
+              <Column field="location.locationName" header="Location Name" filter={true} filterPlaceholder="Location Name" filterMatchMode="contains" />
+              <Column field="courtNumber" header="Court Num" filter={true} filterPlaceholder="Court Num" filterMatchMode="contains" />
+              <Column body={this.eventDateTimeTemplate} header="Event Time" filter={true} filterPlaceholder="Event Time" filterMatchMode="contains" />
+              <Column body={this.scheduledTemplate} header="Is Booked?" filter={true} filterPlaceholder="Is Booked?" filterMatchMode="contains" />
+              <Column field="location.streetNum" header="Street Num" filter={true} filterPlaceholder="Street Num" filterMatchMode="contains" />
+              <Column field="location.streetName" header="Street Name" filter={true} filterPlaceholder="Street Name" filterMatchMode="contains" />
+              <Column field="location.phone" header="Phone" filter={true} filterPlaceholder="Phone" filterMatchMode="contains" />
+              <Column field="location.city" header="City" filter={true} filterPlaceholder="City" filterMatchMode="contains" />
+              <Column field="location.state" header="State" filter={true} filterPlaceholder="State" filterMatchMode="contains" />
+              <Column field="location.zip" header="Zip" filter={true} filterPlaceholder="Zip" filterMatchMode="contains" />
+            </DataTable>
+          </div>
+
           <div className='mx-auto pb-3'>
-            <h1 className='pt-5 text-white'>Create An Event</h1>
+            <h1 className='text-white'>Create An Event</h1>
             <LinkButton link='/basketball' label='Home' type='primary' />
           </div>
           <Card className='mx-auto' style={{maxWidth: '500px'}}>

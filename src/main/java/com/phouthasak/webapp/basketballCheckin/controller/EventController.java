@@ -26,7 +26,7 @@ public class EventController {
         return checkinServices.getLocations();
     }
 
-    @ApiOperation(value = "Get a list of the last 3 events", response = List.class)
+    @ApiOperation(value = "Get a list of the last 10 events", response = List.class)
     @GetMapping("/event/getEvents")
     public ResponseEntity getEvents() {
         return checkinServices.getEvents();

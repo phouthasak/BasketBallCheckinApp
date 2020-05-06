@@ -13,7 +13,7 @@ class BasketballServices extends BaseApi {
     return this._get('/api/event/getLocations').then(this._json);
   }
 
-  getAllEvents() {
+  getEvents() {
     return this._get('/api/event/getEvents').then(this._json);
   }
 
