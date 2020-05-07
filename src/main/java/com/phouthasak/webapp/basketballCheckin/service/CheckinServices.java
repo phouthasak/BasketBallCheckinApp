@@ -3,6 +3,7 @@ package com.phouthasak.webapp.basketballCheckin.service;
 import com.phouthasak.webapp.basketballCheckin.entity.Audit;
 import com.phouthasak.webapp.basketballCheckin.entity.Event;
 import com.phouthasak.webapp.basketballCheckin.entity.Player;
+import com.phouthasak.webapp.basketballCheckin.model.request.DeleteEventRequest;
 import com.phouthasak.webapp.basketballCheckin.model.request.NewPlayerRequest;
 import com.phouthasak.webapp.basketballCheckin.model.response.ErrorResponse;
 import com.phouthasak.webapp.basketballCheckin.repository.AuditRepository;
@@ -70,6 +71,19 @@ public class CheckinServices {
         return new ResponseEntity(responseMap, HttpStatus.OK);
     }
 
+    public ResponseEntity getEventById(Integer eventId) {
+        Optional<Event> event = eventRepository.findByEventIdAndActiveTrue(eventId);
+        Map<String, Object> responseMap = new HashMap<>();
+
+        if (event.isPresent()) {
+            responseMap.put("event", event.get());
+        } else {
+            responseMap.put("event", null);
+        }
+
+        return new ResponseEntity(responseMap, HttpStatus.OK);
+    }
+
     public ResponseEntity getEvents() {
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("events", eventRepository.findTop10ByActiveTrueOrderByCreatedDateDesc());
@@ -113,6 +127,30 @@ public class CheckinServices {
             e.printStackTrace();
             ErrorResponse errorResponse = new ErrorResponse();
             errorResponse.setMessage("Error Occur while trying to create new event");
+            return new ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity deleteEvent(DeleteEventRequest deleteEventRequest) {
+        Optional<Event> event = eventRepository.findByEventIdAndActiveTrue(deleteEventRequest.getEventId());
+        ErrorResponse errorResponse = new ErrorResponse();
+        try{
+            if (event.isPresent()) {
+                Event updatedEvent = event.get();
+                updatedEvent.setActive(false);
+                eventRepository.saveAndFlush(updatedEvent);
+
+                insertLog(Constants.AUDIT_ACTION_TYPE_EVENT_DELETE, "Event " + deleteEventRequest.getEventId() + " Deleted", deleteEventRequest.getDeletedBy());
+                Map<String, Object> responseMap = new HashMap<>();
+                responseMap.put("event", deleteEventRequest);
+                return new ResponseEntity(responseMap, HttpStatus.OK);
+            } else {
+                errorResponse.setMessage("Event id not found: " + deleteEventRequest.getEventId());
+                return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            errorResponse.setMessage("Error on deleting event id: " + deleteEventRequest.getEventId());
             return new ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

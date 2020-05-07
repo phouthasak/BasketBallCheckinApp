@@ -6,6 +6,7 @@ import Basketball from './components/Basketball';
 import PersonalPage from './components/PersonalPage';
 import CreateEvent from './components/basketball/CreateEvent';
 import ViewPlayers from './components/basketball/ViewPlayers';
+import EditEvent from "./components/basketball/EditEvent";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path='/basketBall' component={Basketball}/>
           <Route path='/createEvent' component={CreateEvent}/>
           <Route path='/viewPlayers' component={ViewPlayers}/>
+          <Route path='/editEvent/:id' component={(props) => <EditEvent eventId={props.match.params.id} />}/>
         </Switch>
       </Router>
     </div>

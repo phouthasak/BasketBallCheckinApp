@@ -8,6 +8,13 @@ class Utilities {
     };
   }
 
+  createDeleteEventRequestJsonObject(eventId) {
+    return {
+      eventId: eventId,
+      deletedBy: 'Phouthasak'
+    };
+  }
+
   createNewEventRequestJsonObject(stateObject) {
     const formData = new FormData();
     formData.append('locationId', stateObject.location.locationId);

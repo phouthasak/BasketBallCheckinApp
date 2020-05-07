@@ -1,5 +1,7 @@
 package com.phouthasak.webapp.basketballCheckin.controller;
 
+import com.phouthasak.webapp.basketballCheckin.entity.Event;
+import com.phouthasak.webapp.basketballCheckin.model.request.DeleteEventRequest;
 import com.phouthasak.webapp.basketballCheckin.service.CheckinServices;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +45,17 @@ public class EventController {
                                       @RequestParam("permitFileName") Optional<String> permitFileName,
                                       @NotNull(message = "Host id cannot be null") @RequestParam("hostId") Integer hostId) {
         return checkinServices.createEvent(locationId, courtNumber, eventTime, scheduled, permit, permitFileName, hostId);
+    }
+
+    @ApiOperation(value = "Get an event by id", response = Event.class)
+    @GetMapping("/event/getEvent")
+    public ResponseEntity getEvent(@RequestParam("eventId") Integer eventId) {
+        return checkinServices.getEventById(eventId);
+    }
+
+    @ApiOperation(value = "Delete an event")
+    @PostMapping("/event/deleteEvent")
+    public ResponseEntity deleteEvent(@RequestBody DeleteEventRequest deleteEventRequest) {
+        return checkinServices.deleteEvent(deleteEventRequest);
     }
 }

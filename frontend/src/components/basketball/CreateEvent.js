@@ -1,5 +1,5 @@
 import React, { Component }from 'react';
-import { Card, Form } from 'react-bootstrap';
+import { Card, Form, Button } from 'react-bootstrap';
 import InputFieldWithLabel from '../common/InputFieldWithLabel';
 import SubmitButton from '../common/SubmitButton';
 import LinkButton from '../common/LinkButton';
@@ -14,7 +14,12 @@ import * as Stages from '../util/Constants';
 import Utilities from '../util/Utilities';
 import {DataTable} from 'primereact/datatable';
 import {Column} from 'primereact/column';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faEdit, faCheck, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Link } from 'react-router-dom';
 
+library.add(faEdit, faCheck, faTimes, faTrash);
 
 class CreateEvent extends Component{
   constructor(props) {
@@ -32,7 +37,10 @@ class CreateEvent extends Component{
       permitFileName: '',
       doneLoading: false,
       showModal: false,
+      showDeleteModal: false,
       modalStage: Stages.MODAL_STAGE_WAITING,
+      deleteModalStage: Stages.MODAL_STAGE_WAITING,
+      deleteEventId: '',
       errors: {
         location: false,
         date: false,
@@ -49,6 +57,9 @@ class CreateEvent extends Component{
     this.getEvents = this.getEvents.bind(this);
     this.scheduledTemplate = this.scheduledTemplate.bind(this);
     this.eventDateTimeTemplate = this.eventDateTimeTemplate.bind(this);
+    this.editTemplate = this.editTemplate.bind(this);
+    this.deleteTemplate = this.deleteTemplate.bind(this);
+    this.deleteEventById = this.deleteEventById.bind(this);
   }
 
   componentDidMount() {
@@ -156,7 +167,11 @@ class CreateEvent extends Component{
   }
 
   scheduledTemplate(rowData) {
-    return <div>{rowData.scheduled.toString()}</div>;
+    if (rowData.scheduled) {
+      return <div><FontAwesomeIcon fixedWidth icon="check" /></div>
+    } else {
+      return <div><FontAwesomeIcon fixedWidth icon="times" /></div>
+    }
   }
 
   eventDateTimeTemplate(rowData) {
@@ -168,6 +183,36 @@ class CreateEvent extends Component{
     const minutes = eventDate.getMinutes();
     const finalString = month + '/' + day + '/' + year + ' ' + hour + ':' + minutes;
     return <div>{finalString}</div>
+  }
+
+  editTemplate(rowData) {
+    return <div>
+      <Link to={'/editEvent/' + rowData.eventId} target='_blank'><FontAwesomeIcon fixedWidth icon="edit" /></Link>
+    </div>
+  }
+
+  deleteEventById(eventId) {
+    this.setState({showDeleteModal: true, deleteModalStage: Stages.MODAL_STAGE_WAITING, deleteEventId: eventId}, () => {
+      BasketballServices.deleteEventById(Utilities.createDeleteEventRequestJsonObject(eventId)).then(response => {
+        if (response.status === 200) {
+          this.setState({deleteModalStage: Stages.MODAL_STAGE_SUCCESS});
+        } else {
+          this.setState({deleteModalStage: Stages.MODAL_STAGE_FAIL});
+        }
+      }).catch(error => {
+        console.error(error);
+      });
+    });
+  }
+
+  deleteTemplate(rowData) {
+    return <div>
+      <Button variant="link" className='mb-0 p-0' onClick={() => {
+        this.setState({showDeleteModal: true, deleteModalStage: Stages.MODAL_STAGE_WAITING}, () => {
+          this.deleteEventById(rowData.eventId);
+        });
+      }}><FontAwesomeIcon icon="trash" style={{fontSize: '15px'}} /></Button>
+    </div>
   }
 
   render() {
@@ -191,18 +236,20 @@ class CreateEvent extends Component{
           </div>
           <div className="row pb-5">
             <DataTable ref={(el) => this.dt = el} value={this.state.events} paginator={true} rows={10} header={header}
-                       globalFilter={this.state.globalFilter} emptyMessage="No records found" scrollable style={{width: '1000px'}}>
+                       globalFilter={this.state.globalFilter} emptyMessage="No records found" scrollable={true} style={{width: '1000px'}}>
+              <Column body={this.editTemplate} header="" style={{width: '50px'}} />
               <Column field="eventId" header="Event Id" filter={true} filterPlaceholder="Id" style={{width: '75px'}} />
-              <Column field="location.locationName" header="Location Name" filter={true} filterPlaceholder="Location Name" filterMatchMode="contains" />
-              <Column field="courtNumber" header="Court Num" filter={true} filterPlaceholder="Court Num" filterMatchMode="contains" />
-              <Column body={this.eventDateTimeTemplate} header="Event Time" filter={true} filterPlaceholder="Event Time" filterMatchMode="contains" />
-              <Column body={this.scheduledTemplate} header="Is Booked?" filter={true} filterPlaceholder="Is Booked?" filterMatchMode="contains" />
-              <Column field="location.streetNum" header="Street Num" filter={true} filterPlaceholder="Street Num" filterMatchMode="contains" />
-              <Column field="location.streetName" header="Street Name" filter={true} filterPlaceholder="Street Name" filterMatchMode="contains" />
-              <Column field="location.phone" header="Phone" filter={true} filterPlaceholder="Phone" filterMatchMode="contains" />
-              <Column field="location.city" header="City" filter={true} filterPlaceholder="City" filterMatchMode="contains" />
-              <Column field="location.state" header="State" filter={true} filterPlaceholder="State" filterMatchMode="contains" />
-              <Column field="location.zip" header="Zip" filter={true} filterPlaceholder="Zip" filterMatchMode="contains" />
+              <Column field="location.locationName" header="Location Name" filter={true} filterPlaceholder="Location Name" filterMatchMode="contains" style={{width: '125px'}} />
+              <Column field="courtNumber" header="Court Num" filter={true} filterPlaceholder="Court Num" filterMatchMode="contains" style={{width: '75px'}} />
+              <Column body={this.eventDateTimeTemplate} header="Event Time" filter={true} filterPlaceholder="Event Time" filterMatchMode="contains" style={{width: '125px'}} />
+              <Column body={this.scheduledTemplate} header="Booked?" style={{width: '75px'}} />
+              <Column field="location.streetNum" header="Street Num" filter={true} filterPlaceholder="Street Num" filterMatchMode="contains" style={{width: '75px'}} />
+              <Column field="location.streetName" header="Street Name" filter={true} filterPlaceholder="Street Name" filterMatchMode="contains" style={{width: '125px'}} />
+              <Column field="location.phone" header="Phone" filter={true} filterPlaceholder="Phone" filterMatchMode="contains" style={{width: '150px'}} />
+              <Column field="location.city" header="City" filter={true} filterPlaceholder="City" filterMatchMode="contains" style={{width: '100px'}} />
+              <Column field="location.state" header="State" filter={true} filterPlaceholder="State" filterMatchMode="contains" style={{width: '75px'}} />
+              <Column field="location.zip" header="Zip" filter={true} filterPlaceholder="Zip" filterMatchMode="contains" style={{width: '75px'}} />
+              <Column body={this.deleteTemplate} header="" style={{width: '50px'}} />
             </DataTable>
           </div>
 
@@ -261,6 +308,16 @@ class CreateEvent extends Component{
                         successLabel={'Event Created For: ' + this.state.location.locationName}
                         failLabel={'Failed to create event'}
                         close={() => window.location.reload()}/>
+
+          <TwoStepModal display={this.state.showDeleteModal} stage={this.state.deleteModalStage} waitingLabel={'Deleting event: ' + this.state.deleteEventId + '...'}
+                        successLabel={'Event have been deleted: ' + this.state.deleteEventId}
+                        failLabel={'Failed to delete event: ' + this.state.deleteEventId}
+                        close={() => {
+                          this.setState({showDeleteModal: false, doneLoading: false, deleteEventId: ''}, () => {
+                            const stateObject = this.state;
+                            this.getEvents(stateObject);
+                          });
+                        }}/>
         </div>
       </div>
     );

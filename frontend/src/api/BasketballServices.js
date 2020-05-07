@@ -13,8 +13,16 @@ class BasketballServices extends BaseApi {
     return this._get('/api/event/getLocations').then(this._json);
   }
 
+  getEventById(id) {
+    return this._get('/api/event/getEvent?eventId=' + id).then(this._json);
+  }
+
   getEvents() {
     return this._get('/api/event/getEvents').then(this._json);
+  }
+
+  deleteEventById(jsonObject) {
+    return this._post('/api/event/deleteEvent', jsonObject);
   }
 
   createNewEvent(formData) {
