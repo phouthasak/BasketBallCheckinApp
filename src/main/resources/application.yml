@@ -13,9 +13,9 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
   datasource:
-      url: jdbc:mysql://127.0.0.1:3306/basketballcheckin?autoReconnect=true&useSSL=false&serverTimezone=EST&useLegacyDatetimeCode=false
-      username: phouthasak
-      password: UTrockets95
+      url: # need to provide jdbc url string
+      username: # database username
+      password: # database password
   servlet:
     multipart:
       max-file-size: 10MB

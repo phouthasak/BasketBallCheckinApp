@@ -1,29 +1,22 @@
 package com.phouthasak.webapp.basketballCheckin.service;
 
-import com.phouthasak.webapp.basketballCheckin.entity.Audit;
-import com.phouthasak.webapp.basketballCheckin.entity.Event;
-import com.phouthasak.webapp.basketballCheckin.entity.Player;
-import com.phouthasak.webapp.basketballCheckin.model.request.DeleteEventRequest;
-import com.phouthasak.webapp.basketballCheckin.model.request.NewPlayerRequest;
+import com.phouthasak.webapp.basketballCheckin.entity.*;
+import com.phouthasak.webapp.basketballCheckin.model.request.*;
 import com.phouthasak.webapp.basketballCheckin.model.response.ErrorResponse;
-import com.phouthasak.webapp.basketballCheckin.repository.AuditRepository;
-import com.phouthasak.webapp.basketballCheckin.repository.EventRepository;
-import com.phouthasak.webapp.basketballCheckin.repository.LocationRepository;
-import com.phouthasak.webapp.basketballCheckin.repository.PlayerRepository;
+import com.phouthasak.webapp.basketballCheckin.repository.*;
 import com.phouthasak.webapp.basketballCheckin.util.Constants;
 import com.phouthasak.webapp.basketballCheckin.util.Util;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
+@Slf4j
 public class CheckinServices {
     @Autowired
     private PlayerRepository playerRepository;
@@ -36,6 +29,12 @@ public class CheckinServices {
 
     @Autowired
     private LocationRepository locationRepository;
+
+    @Autowired
+    private PlayerCheckInRepository playerCheckInRepository;
+
+    @Autowired
+    private NonPlayerCheckInRepository nonPlayerCheckInRepository;
 
     @Autowired
     private Util util;
@@ -74,9 +73,15 @@ public class CheckinServices {
     public ResponseEntity getEventById(Integer eventId) {
         Optional<Event> event = eventRepository.findByEventIdAndActiveTrue(eventId);
         Map<String, Object> responseMap = new HashMap<>();
-
         if (event.isPresent()) {
+            List<PlayerCheckIn> playerCheckIns = playerCheckInRepository.findAllByEventIdAndActiveTrue(eventId);
+            List<NonPlayerCheckIn> nonPlayerCheckIns = nonPlayerCheckInRepository.findAllByEventIdAndActiveTrue(eventId);
+            log.info("Event Id " + eventId + " have been found!!!");
+            log.info("Player Checked In: " + playerCheckIns);
+            log.info("Non Player Checked In: " + nonPlayerCheckIns);
             responseMap.put("event", event.get());
+            responseMap.put("playerCheckIns", playerCheckIns);
+            responseMap.put("nonPlayerCheckIns", nonPlayerCheckIns);
         } else {
             responseMap.put("event", null);
         }
@@ -117,7 +122,7 @@ public class CheckinServices {
                 insertLog(Constants.AUDIT_ACTION_TYPE_CREATE_EVENT, "Created event " + event.getEventId(), playerName);
                 Map<String, Object> responseMap = new HashMap<>();
                 responseMap.put("eventId", event.getEventId());
-                return new ResponseEntity(responseMap, HttpStatus.OK);
+                return getEventById(event.getEventId());
             } else {
                 ErrorResponse errorResponse = new ErrorResponse();
                 errorResponse.setMessage("Error saving event");
@@ -155,6 +160,74 @@ public class CheckinServices {
         }
     }
 
+    public ResponseEntity checkInPlayers(CheckInPlayersRequest checkInPlayersRequest) {
+        Optional<Event> event = eventRepository.findByEventIdAndActiveTrue(checkInPlayersRequest.getEventId());
+        ErrorResponse errorResponse = new ErrorResponse();
+        if (event.isPresent()) {
+            // If users provide a check in id from request, system will updated that check in,
+            // else a new check in will be created
+
+            List<PlayerCheckIn> playerCheckIns = util.fillPlayerCheckIn(
+                    checkInPlayersRequest.getPlayerCheckIn(),
+                    checkInPlayersRequest.getEventId(),
+                    checkInPlayersRequest.getCheckInBy(),
+                    checkInPlayersRequest.getCheckInDate());
+
+            List<NonPlayerCheckIn> nonPlayerCheckIns = util.fillNonPlayerCheckIn(
+                    checkInPlayersRequest.getNonPlayerCheckIns(),
+                    checkInPlayersRequest.getEventId(),
+                    checkInPlayersRequest.getCheckInBy(),
+                    checkInPlayersRequest.getCheckInDate());
+
+            List<Audit> playerCheckInLogs = util.createPlayerCheckInLogs(
+                    new ArrayList<>(),
+                    checkInPlayersRequest.getPlayerCheckIn(),
+                    checkInPlayersRequest.getEventId(),
+                    checkInPlayersRequest.getCheckInDate(),
+                    checkInPlayersRequest.getCheckInBy());
+
+            playerCheckInLogs = util.createNonPlayerCheckInLogs(
+                    playerCheckInLogs,
+                    checkInPlayersRequest.getNonPlayerCheckIns(),
+                    checkInPlayersRequest.getEventId(),
+                    checkInPlayersRequest.getCheckInDate(),
+                    checkInPlayersRequest.getCheckInBy());
+
+            playerCheckInRepository.saveAll(playerCheckIns);
+            playerCheckInRepository.flush();
+            nonPlayerCheckInRepository.saveAll(nonPlayerCheckIns);
+            nonPlayerCheckInRepository.flush();
+            auditRepository.saveAll(playerCheckInLogs);
+            auditRepository.flush();
+
+            log.info("Player Check In Updated: " + playerCheckIns.size());
+            log.info("NonPlayer Check In Updated: " + nonPlayerCheckIns.size());
+
+            return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
+        } else {
+            errorResponse.setMessage("Event could not be found");
+            return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Autowired
+    private TestRepository tester;
+
+    public ResponseEntity test(TestRequest testRequest) {
+        List<TestTable> records = new ArrayList<>();
+        for(TestObject request: testRequest.getTestObjects()) {
+            TestTable record = new TestTable();
+            if (request.getId().isPresent()) {
+                record.setId(request.getId().get());
+            }
+            record.setTest(request.getName());
+            records.add(record);
+        }
+        tester.saveAll(records);
+        tester.flush();
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
     public void insertLog(String actionType, String description, String createdBy) {
         Audit audit = new Audit();
         audit.setActionType(actionType);
@@ -162,7 +235,6 @@ public class CheckinServices {
         audit.setCreatedDate(new Date());
         audit.setCreatedBy(createdBy);
         audit.setActive(true);
-
         auditRepository.saveAndFlush(audit);
     }
 }
