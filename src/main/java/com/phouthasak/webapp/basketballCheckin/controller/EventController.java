@@ -3,11 +3,9 @@ package com.phouthasak.webapp.basketballCheckin.controller;
 import com.phouthasak.webapp.basketballCheckin.entity.Event;
 import com.phouthasak.webapp.basketballCheckin.model.request.CheckInPlayersRequest;
 import com.phouthasak.webapp.basketballCheckin.model.request.DeleteEventRequest;
-import com.phouthasak.webapp.basketballCheckin.model.request.TestRequest;
 import com.phouthasak.webapp.basketballCheckin.service.CheckinServices;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,11 +57,6 @@ public class EventController {
     @PostMapping("/event/checkIn")
     public ResponseEntity checkPlayersIn(@RequestBody CheckInPlayersRequest checkInPlayersRequest) {
         return checkinServices.checkInPlayers(checkInPlayersRequest);
-    }
-
-    @PostMapping("/event/tester")
-    public ResponseEntity testNullIds(@RequestBody TestRequest testRequest) {
-        return checkinServices.test(testRequest);
     }
 
     @ApiOperation(value = "Delete an event")

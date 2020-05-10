@@ -210,24 +210,6 @@ public class CheckinServices {
         }
     }
 
-    @Autowired
-    private TestRepository tester;
-
-    public ResponseEntity test(TestRequest testRequest) {
-        List<TestTable> records = new ArrayList<>();
-        for(TestObject request: testRequest.getTestObjects()) {
-            TestTable record = new TestTable();
-            if (request.getId().isPresent()) {
-                record.setId(request.getId().get());
-            }
-            record.setTest(request.getName());
-            records.add(record);
-        }
-        tester.saveAll(records);
-        tester.flush();
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
     public void insertLog(String actionType, String description, String createdBy) {
         Audit audit = new Audit();
         audit.setActionType(actionType);
