@@ -16,7 +16,7 @@ import {DataTable} from 'primereact/datatable';
 import {Column} from 'primereact/column';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faEdit, faCheck, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 
 library.add(faEdit, faCheck, faTimes, faTrash);

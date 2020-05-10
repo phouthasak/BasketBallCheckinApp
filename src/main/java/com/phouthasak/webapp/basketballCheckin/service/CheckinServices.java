@@ -122,7 +122,7 @@ public class CheckinServices {
                 insertLog(Constants.AUDIT_ACTION_TYPE_CREATE_EVENT, "Created event " + event.getEventId(), playerName);
                 Map<String, Object> responseMap = new HashMap<>();
                 responseMap.put("eventId", event.getEventId());
-                return getEventById(event.getEventId());
+                return new ResponseEntity(responseMap, HttpStatus.OK);
             } else {
                 ErrorResponse errorResponse = new ErrorResponse();
                 errorResponse.setMessage("Error saving event");
@@ -168,7 +168,7 @@ public class CheckinServices {
             // else a new check in will be created
 
             List<PlayerCheckIn> playerCheckIns = util.fillPlayerCheckIn(
-                    checkInPlayersRequest.getPlayerCheckIn(),
+                    checkInPlayersRequest.getPlayerCheckIns(),
                     checkInPlayersRequest.getEventId(),
                     checkInPlayersRequest.getCheckInBy(),
                     checkInPlayersRequest.getCheckInDate());
@@ -181,7 +181,7 @@ public class CheckinServices {
 
             List<Audit> playerCheckInLogs = util.createPlayerCheckInLogs(
                     new ArrayList<>(),
-                    checkInPlayersRequest.getPlayerCheckIn(),
+                    checkInPlayersRequest.getPlayerCheckIns(),
                     checkInPlayersRequest.getEventId(),
                     checkInPlayersRequest.getCheckInDate(),
                     checkInPlayersRequest.getCheckInBy());
@@ -203,7 +203,7 @@ public class CheckinServices {
             log.info("Player Check In Updated: " + playerCheckIns.size());
             log.info("NonPlayer Check In Updated: " + nonPlayerCheckIns.size());
 
-            return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
+            return getEventById(checkInPlayersRequest.getEventId());
         } else {
             errorResponse.setMessage("Event could not be found");
             return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);

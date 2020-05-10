@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 public class CheckInPlayersRequest {
-    private List<PlayerCheckInRequest> playerCheckIn;
+    private List<PlayerCheckInRequest> playerCheckIns;
     private List<NonPlayerCheckInRequest> nonPlayerCheckIns;
 
     @NotEmpty(message = "Check In By cannot be empty")

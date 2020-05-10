@@ -38,6 +38,36 @@ class Utilities {
       return true;
     }
   }
+
+  eventResponseToStateObject(response) {
+    const eventDate = new Date(response.event.eventDateTime);
+    const month = eventDate.getMonth() + 1;
+    const day = eventDate.getDate();
+    const year = eventDate.getFullYear();
+    const hour = eventDate.getHours();
+    const minutes = eventDate.getMinutes();
+    const finalString = month + '/' + day + '/' + year + ' ' + hour + ':' + minutes;
+
+    return {
+      eventId: response.event.eventId,
+      locationName: response.event.location.locationName,
+      courtNumber: response.event.courtNumber,
+      eventDateTime: finalString,
+      scheduled: (response.event.scheduled ? 'Yes' : 'No'),
+      hostName: response.event.player.firstName+ " " + response.event.player.lastName,
+    };
+  }
+
+  createCheckInJsonRequestObject(stateObject) {
+    const currentDate = new Date();
+    return {
+      'checkInBy': 'Phouthasak',
+      'eventId': stateObject.originalEvent.eventId,
+      'playerCheckIns': stateObject.playerEditList,
+      'nonPlayerCheckIns': stateObject.nonPlayerEditList,
+      'checkInDate': currentDate
+    };
+  }
 }
 
 export default new Utilities();

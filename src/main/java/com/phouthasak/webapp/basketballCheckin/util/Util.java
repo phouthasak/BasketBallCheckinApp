@@ -33,7 +33,7 @@ public class Util {
         for (PlayerCheckInRequest request : requests) {
             PlayerCheckIn checkIn = new PlayerCheckIn();
 
-            if (request.getCheckInId().isPresent()) {
+            if (request.getCheckInId() != null && request.getCheckInId().isPresent()) {
                 checkIn.setCheckInId(request.getCheckInId().get());
             }
 
@@ -55,7 +55,7 @@ public class Util {
         for (NonPlayerCheckInRequest request : requests) {
             NonPlayerCheckIn checkIn = new NonPlayerCheckIn();
 
-            if (request.getCheckInId().isPresent()) {
+            if (request.getCheckInId() != null && request.getCheckInId().isPresent()) {
                 checkIn.setCheckInId(request.getCheckInId().get());
             }
 
@@ -79,7 +79,7 @@ public class Util {
             Audit audit = new Audit();
 
             String description;
-            if (request.getCheckInId().isPresent()) {
+            if (request.getCheckInId() != null && request.getCheckInId().isPresent()) {
                 audit.setActionType(Constants.AUDIT_ACTION_TYPE_PLAYER_CHECKIN_UPDATE);
                 description = "CheckIn Id: " + request.getCheckInId().get().toString() + " | Event Id: " + eventId.toString() + " | Player: " + request.getPlayerId().toString() + " changed status to ->" + request.getCheckInStatus().toString();
             } else {
@@ -101,7 +101,7 @@ public class Util {
             Audit audit = new Audit();
 
             String description;
-            if (request.getCheckInId().isPresent()) {
+            if (request.getCheckInId() != null && request.getCheckInId().isPresent()) {
                 audit.setActionType(Constants.AUDIT_ACTION_TYPE_NON_PLAYER_CHECKIN_UPDATE);
                 description = "CheckIn Id: " + request.getCheckInId().get().toString() + " | Event Id: " + eventId.toString() + " | Sponsor: " + request.getSponsorId() +" | NonPlayer: " + request.getFirstName() + " " + request.getLastName() + " changed status to ->" + request.getCheckInStatus().toString();
             } else {

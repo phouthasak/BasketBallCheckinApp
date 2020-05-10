@@ -28,6 +28,10 @@ class BasketballServices extends BaseApi {
   createNewEvent(formData) {
     return this._postWithFormData('/api/event/createEvent', formData);
   }
+
+  postCheckIns(jsonObject) {
+    return this._post('/api/event/checkIn', jsonObject);
+  }
 }
 
 export default new BasketballServices();
