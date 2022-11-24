@@ -1,17 +1,18 @@
 package com.phouthasak.webapp.basketballCheckin.entity;
 
+import com.phouthasak.webapp.basketballCheckin.dto.UserDto;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "users")
+@Table(name = "ja_user")
 @Getter
 @Setter
-public class UserPo implements Serializable {
+public class UserPo {
     @Id
     @Column(name = "id")
     private String id;
@@ -34,6 +35,9 @@ public class UserPo implements Serializable {
     @Column(name = "enabled")
     private boolean enabled;
 
+    @Column(name = "admin")
+    private boolean admin;
+
     @Basic(optional = false)
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name ="created_date", insertable = false, updatable = false)
@@ -43,4 +47,13 @@ public class UserPo implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name ="modified_date", insertable = false, updatable = false)
     private Date modifiedDate;
+
+    public static UserPo from(UserDto userDto) {
+        if (userDto == null) return null;
+
+        UserPo userPo = new UserPo();
+        BeanUtils.copyProperties(userDto, userPo);
+
+        return userPo;
+    }
 }

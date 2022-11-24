@@ -47,4 +47,8 @@ public class UserPrincipal implements UserDetails {
     public boolean isEnabled() {
         return user.isEnabled();
     }
+
+    public boolean isAdmin() {
+        return user.isAdmin();
+    }
 }
